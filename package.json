@@ -1,0 +1,8 @@
+{
+  "name": "mmm-mirrormap",
+  "version": "1.0.0",
+  "description": "MagicMirror² module: reusable maps that other modules can pin live data onto, and that take turns with their parent modules",
+  "main": "MMM-MirrorMap.js",
+  "engines": { "node": ">=18" },
+  "license": "MIT"
+}

@@ -1,0 +1,213 @@
+/* MMM-MirrorMap */
+
+.MMM-MirrorMap .mm-root {
+	display: inline-block;
+}
+
+.MMM-MirrorMap .mm-canvas.leaflet-container {
+	background: #000;
+	font-family: inherit;
+}
+
+/* Blend the map's edges into the black mirror (fadeEdges) */
+.MMM-MirrorMap .mm-canvas.mm-fade {
+	-webkit-mask-image: radial-gradient(closest-side, #000 72%, transparent 100%);
+	mask-image: radial-gradient(closest-side, #000 72%, transparent 100%);
+}
+
+/* Problems the map reports about itself (showStatus) */
+.MMM-MirrorMap .mm-status {
+	color: #ffb35c;
+	font-size: 13px;
+	line-height: 1.3;
+}
+
+.MMM-MirrorMap .mm-status:empty {
+	display: none;
+}
+
+/* Map data credits (required by OpenStreetMap / OpenTopoMap and other tile providers) */
+.MMM-MirrorMap .mm-credit {
+	margin-top: 2px;
+	color: #555;
+	font-size: 9px;
+	line-height: 1.2;
+	text-align: right;
+}
+
+/* Moving markers (planes, buses) glide to their new position */
+.MMM-MirrorMap .mm-marker.mm-animate {
+	transition: transform 2s linear;
+}
+
+/* ---------- Marker labels (any style) ---------- */
+
+.MMM-MirrorMap .mm-label {
+	position: absolute;
+	left: 0;
+	transform: translateX(-50%);
+	padding: 1px 5px;
+	border-radius: 2px;
+	background: rgba(70, 70, 70, 0.85);
+	color: #eee;
+	font-size: 11px;
+	font-weight: 600;
+	letter-spacing: 0.03em;
+	line-height: 1.3;
+	white-space: nowrap;
+}
+
+/* ---------- style: "pin" — rounded pill with an icon and a number (Lyft-style) ---------- */
+
+.MMM-MirrorMap .mm-pin {
+	--mm-bg: var(--mm-color, #555);
+	position: absolute;
+	left: 0;
+	bottom: 7px;
+	transform: translateX(-50%);
+	display: flex;
+	align-items: center;
+	gap: 0.6em;
+	padding: 0.13em 0.6em 0.13em 0.13em;
+	border-radius: 999px;
+	background: var(--mm-bg);
+	color: #fff;
+	font-weight: 600;
+	line-height: 1;
+	white-space: nowrap;
+	box-shadow: 0 1px 4px rgba(0, 0, 0, 0.6);
+}
+
+.MMM-MirrorMap .mm-pin.mm-pin-texton {
+	padding: 0.25em 0.6em;
+}
+
+.MMM-MirrorMap .mm-pin::after {
+	content: "";
+	position: absolute;
+	left: 50%;
+	bottom: -6px;
+	transform: translateX(-50%);
+	border-left: 6px solid transparent;
+	border-right: 6px solid transparent;
+	border-top: 7px solid var(--mm-bg);
+}
+
+/* One icon + number; a pin can have several (e.g. e-bikes, then bikes) */
+.MMM-MirrorMap .mm-part {
+	display: flex;
+	align-items: center;
+	gap: 0.33em;
+}
+
+/* Icon in a darker filled circle (darkens whatever the pin colour is) */
+.MMM-MirrorMap .mm-pin-icon {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 1.6em;
+	height: 1.6em;
+	border-radius: 50%;
+	background: rgba(0, 0, 0, 0.3);
+	font-size: 0.85em;
+}
+
+.MMM-MirrorMap .mm-pin ~ .mm-label {
+	top: 6px;
+}
+
+/* empty: nothing available; off: out of service */
+.MMM-MirrorMap .mm-pin.mm-empty {
+	--mm-bg: #3b3b3b;
+	color: #aaa;
+}
+
+.MMM-MirrorMap .mm-pin.mm-off {
+	--mm-bg: #2a2a2a;
+	color: #666;
+}
+
+.MMM-MirrorMap .mm-pin.mm-empty .mm-pin-icon,
+.MMM-MirrorMap .mm-pin.mm-off .mm-pin-icon {
+	background: rgba(255, 255, 255, 0.08);
+}
+
+.MMM-MirrorMap .mm-text {
+	transition: opacity 0.4s ease;
+}
+
+.MMM-MirrorMap .mm-text.mm-changing {
+	opacity: 0;
+}
+
+/* ---------- style: "symbol" — a rotatable icon with an optional label (e.g. planes) ---------- */
+
+.MMM-MirrorMap .mm-symbol {
+	position: absolute;
+	left: 0;
+	top: 0;
+	color: var(--mm-color, #fff);
+}
+
+.MMM-MirrorMap .mm-symbol-icon {
+	position: absolute;
+	left: -0.5em;
+	top: -0.5em;
+	width: 1em;
+	height: 1em;
+	line-height: 0;
+	filter: drop-shadow(0 0 2px rgba(0, 0, 0, 0.9));
+	transition: transform 1s ease;
+}
+
+.MMM-MirrorMap .mm-symbol .mm-label {
+	top: 0.55em;
+}
+
+.MMM-MirrorMap .mm-symbol.mm-empty,
+.MMM-MirrorMap .mm-symbol.mm-off {
+	opacity: 0.45;
+}
+
+/* ---------- style: "dot" — a small coloured dot with an optional label ---------- */
+
+.MMM-MirrorMap .mm-dotmark {
+	position: absolute;
+	left: 0;
+	top: 0;
+}
+
+.MMM-MirrorMap .mm-dot {
+	position: absolute;
+	left: -0.5em;
+	top: -0.5em;
+	width: 1em;
+	height: 1em;
+	border-radius: 50%;
+	background: var(--mm-color, #fff);
+	box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.6);
+}
+
+.MMM-MirrorMap .mm-dotmark .mm-label {
+	top: 0.8em;
+}
+
+.MMM-MirrorMap .mm-dotmark.mm-empty,
+.MMM-MirrorMap .mm-dotmark.mm-off {
+	opacity: 0.45;
+}
+
+/* ---------- "You are here" ---------- */
+
+.MMM-MirrorMap .mm-home-dot {
+	position: absolute;
+	left: -8px;
+	top: -8px;
+	width: 16px;
+	height: 16px;
+	box-sizing: border-box;
+	border: 2.5px solid #fff;
+	border-radius: 50%;
+	background: #2f7cf6;
+	box-shadow: 0 0 0 7px rgba(47, 124, 246, 0.25);
+}
