@@ -2,8 +2,6 @@
 
 A reusable map for [MagicMirror²](https://magicmirror.builders). Add it to your config as many times as you like — each copy has its own position, area, zoom and map style — and let other modules pin live data onto it: bike-share stations, flights, buses, anything with a latitude and longitude.
 
-A map can also **take turns with its "parent" modules**: it fades in where they were, stays for a while, then hands the spot back. Each map has its own partners and its own timer.
-
 ## Install
 
 ```bash
@@ -31,12 +29,11 @@ The `topo` style is the exception: it shows [OpenTopoMap](https://opentopomap.or
 // At the top of config.js (outside `let config = { ... }`):
 const GEOAPIFY_KEY = "your-geoapify-key";
 
-// Top left: Lyft list, taking turns with a close-up dark map of the stations around you
+// Top left: Lyft list, with a close-up dark map of the stations around you
 {
 	module: "MMM-LyftBikes",
 	position: "top_left",
 	header: "Bay Wheels",
-	classes: "lyft-group",                 // the map finds its partner by this class
 	config: { stationName: "Your Station Name" }
 },
 {
@@ -49,15 +46,11 @@ const GEOAPIFY_KEY = "your-geoapify-key";
 		homeLat: 40.7484, homeLon: -73.9857,
 		zoom: 16,
 		style: "dark",
-		apiKey: GEOAPIFY_KEY,
-		alternateWith: "lyft-group",
-		interval: 30
+		apiKey: GEOAPIFY_KEY
 	}
 },
 
-// Bottom right: two modules shown together, taking turns with a zoomed-out topographic flight map
-{ module: "MMM-SomeFlightList", position: "bottom_right", classes: "flight-group", config: { /* ... */ } },
-{ module: "MMM-SomethingElse",  position: "bottom_right", classes: "flight-group", config: { /* ... */ } },
+// Bottom right: a zoomed-out topographic flight map
 {
 	module: "MMM-MirrorMap",
 	position: "bottom_right",
@@ -68,14 +61,10 @@ const GEOAPIFY_KEY = "your-geoapify-key";
 		zoom: 9,
 		width: 420, height: 300,
 		style: "topo",                       // OpenTopoMap — no key needed
-		tileFilter: "brightness(0.55)",      // tone a light map down for the mirror
-		alternateWith: "flight-group",
-		interval: 45
+		tileFilter: "brightness(0.55)"       // tone a light map down for the mirror
 	}
 }
 ```
-
-Put the map **after** its partner modules in the same position. Every module with the `alternateWith` class swaps out together and comes back together.
 
 ## Options
 
@@ -95,10 +84,6 @@ Put the map **after** its partner modules in the same position. Every module wit
 | `fadeEdges` | `false` | Blend the map's edges into the black mirror. |
 | `showStatus` | `true` | Show a short orange message under the map if it can't load the map library, tiles, or data. |
 | `showCredit` | `true` | Map data credit line under the map. Most tile providers require it. |
-| `alternateWith` | `null` | CSS class of the module(s) this map takes turns with. Leave empty to always show the map. |
-| `interval` | `30` | Seconds per turn. |
-| `startWith` | `"modules"` | Show the partner `"modules"` or the `"map"` first. |
-| `fadeSpeed` | `1000` | Milliseconds for the hand-over. |
 
 To restyle markers (sizes, colours, label look), override the `.MMM-MirrorMap .mm-…` classes in `config/custom.css`.
 
