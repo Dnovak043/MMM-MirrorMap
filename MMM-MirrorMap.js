@@ -79,12 +79,7 @@ Module.register("MMM-MirrorMap", {
 		homeLon: null,
 		fadeEdges: false,         // true = blend the map's edges into the black mirror
 		showCredit: true,         // map data credit line under the map (required by most tile providers)
-		showStatus: true,         // show a short message on the mirror if the map can't load tiles or data
-
-		alternateWith: null,      // CSS class of the module(s) this map takes turns with (set `classes` on them)
-		interval: 30,             // seconds per turn
-		startWith: "modules",     // show "modules" or "map" first
-		fadeSpeed: 1000           // ms for the hand-over
+		showStatus: true          // show a short message on the mirror if the map can't load tiles or data
 	},
 
 	// this.file() points at this module's own folder. A bare "vendor/..." path would be looked up
@@ -174,7 +169,6 @@ Module.register("MMM-MirrorMap", {
 		if (notification === "DOM_OBJECTS_CREATED") {
 			this.initMap();
 			this.announceView();
-			this.setupAlternation();
 		} else if (notification === "MAP_VIEW_REQUEST") {
 			this.announceView();
 		} else if (notification === "MAP_MARKERS") {
@@ -211,37 +205,10 @@ Module.register("MMM-MirrorMap", {
 		});
 	},
 
-	/* ---------- Taking turns with other modules ---------- */
-
-	partners () {
-		return MM.getModules().withClass(this.config.alternateWith).exceptModule(this);
-	},
-
-	setupAlternation () {
-		if (!this.config.alternateWith || this.alternating) return;
-		this.alternating = true;
-		const lock = { lockString: this.identifier };
-		this.onMap = this.config.startWith === "map";
-		if (this.onMap) this.partners().enumerate((m) => m.hide(0, lock));
-		else this.hide(0, lock);
-		setInterval(() => this.swap(), Math.max(5, this.config.interval) * 1000);
-	},
-
-	swap () {
-		const lock = { lockString: this.identifier };
-		const half = Math.max(0, this.config.fadeSpeed / 2);
-		if (this.onMap) {
-			// map out, then the modules in
-			this.hide(half, () => this.partners().enumerate((m) => m.show(half, lock)), lock);
-		} else {
-			// modules out, then the map in
-			this.partners().enumerate((m) => m.hide(half, lock));
-			setTimeout(() => {
-				this.show(half, () => {}, lock);
-				this.refreshSize();
-			}, half);
-		}
-		this.onMap = !this.onMap;
+	// MagicMirror calls this whenever the module is shown again (e.g. by a module that rotates
+	// what's on screen). A map laid out while hidden can have the wrong size, so redraw it.
+	resume () {
+		this.refreshSize();
 	},
 
 	/* ---------- The map ---------- */
